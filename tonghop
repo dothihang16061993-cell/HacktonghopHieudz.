@@ -1,0 +1,1200 @@
+-- ============================================
+-- HIeuDzXD ULTIMATE HUB MANAGER v5.2
+-- FEATURES: LOADING SCREEN | CUSTOM SETTINGS
+-- ============================================
+
+local Players = game:GetService("Players")
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+
+-- ============================================
+-- SETTINGS
+-- ============================================
+local Settings = {
+    Theme = {
+        Primary = Color3.fromRGB(255, 100, 0),
+        Secondary = Color3.fromRGB(20, 8, 45),
+        Accent = Color3.fromRGB(255, 200, 100),
+        Text = Color3.fromRGB(255, 255, 255),
+        SubText = Color3.fromRGB(200, 200, 220),
+        CardBg = Color3.fromRGB(25, 15, 50),
+        Border = Color3.fromRGB(60, 40, 100)
+    },
+    Size = {
+        Width = 420,
+        Height = 480,
+        Scale = 1.0
+    }
+}
+
+-- ============================================
+-- SCRIPT REGISTRY
+-- ============================================
+local ScriptRegistry = {
+    {id = "SA-Hub", name = "SA Hub", description = "Blox Fruits Auto Farm", url = "https://luaegis.net/scripts/v4/loaders/eb40fd55-3c89-4c59-b526-5aa788097e2a.lua", color = Color3.fromRGB(255,50,100), category = "Blox Fruits", icon = "⚔️", enabled = false},
+    {id = "Quantum-Hub", name = "Quantum Hub", description = "Quantum Onyx Hub", url = "https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua", color = Color3.fromRGB(100,50,255), category = "Blox Fruits", icon = "💠", enabled = false},
+    {id = "Neji-Hub", name = "Neji Hub", description = "Neji Depzai Hub", url = "https://raw.githubusercontent.com/Dev-NejiDepzai/Bloxfruits/refs/heads/main/Main.lua", color = Color3.fromRGB(0,200,255), category = "Blox Fruits", icon = "🌀", enabled = false},
+    {id = "Vantablack-Hub", name = "Vantablack Hub", description = "Vantablack HUD", url = "https://raw.githubusercontent.com/tranduykhanh08428-web/VantablackxHud/refs/heads/main/VantablackHudBeta.lua.txt", color = Color3.fromRGB(50,50,50), category = "Blox Fruits", icon = "🌑", enabled = false},
+    {id = "Nana-Hub", name = "Nana Hub", description = "Nana 2in1 Hub", url = "https://raw.githubusercontent.com/tamdznanatv/main/refs/heads/main/main2in1.luau", color = Color3.fromRGB(255,100,200), category = "Blox Fruits", icon = "🌸", enabled = false},
+    {id = "LTD-Hub", name = "LTD Hub", description = "Thanh Duy Hub", url = "https://www.xhider.xyz/raw/ThanhDuyHub/BloxFruit.Xnhau", color = Color3.fromRGB(255,200,50), category = "Blox Fruits", icon = "⭐", enabled = false},
+    {id = "Gravity-Hub", name = "Gravity Hub", description = "Dev Gravity Hub", url = "https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Main.lua", color = Color3.fromRGB(0,255,150), category = "Blox Fruits", icon = "🌌", enabled = false},
+    {id = "BlueX-Hub", name = "BlueX Hub", description = "BlueX Hub", url = "https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua", color = Color3.fromRGB(50,150,255), category = "Blox Fruits", icon = "🔵", enabled = false},
+    {id = "Alchemy-Hub", name = "Alchemy Hub", description = "Alchemy Hub", url = "https://getalchemy.net/r", color = Color3.fromRGB(200,50,255), category = "Blox Fruits", icon = "🧪", enabled = false},
+    {id = "Setting-Hub", name = "Settings Hub", description = "Setting Hub", url = "https://pastefy.app/AjS0TLCt/raw", color = Color3.fromRGB(150,150,150), category = "Blox Fruits", icon = "⚙️", enabled = false},
+    {id = "Meng-Fisch", name = "Meng Fisch", description = "Fisch Auto Farm", url = "https://raw.githubusercontent.com/GrexXMeng/Mengs/refs/heads/main/Fisch.lua", color = Color3.fromRGB(0,200,255), category = "Fisch", icon = "🐟", enabled = false},
+    {id = "Meng-FishIt", name = "Meng FishIt", description = "FishIt Auto Farm", url = "https://raw.githubusercontent.com/GrexXMeng/Mengs/refs/heads/main/FishIt.lua", color = Color3.fromRGB(0,150,255), category = "Fisch", icon = "🎣", enabled = false},
+    {id = "Meng-Tsunami", name = "Meng Tsunami", description = "Tsunami Brainrot", url = "https://raw.githubusercontent.com/GrexXMeng/Mengs/refs/heads/main/TsunamiBrainrot.lua", color = Color3.fromRGB(0,100,200), category = "Fisch", icon = "🌊", enabled = false},
+    {id = "Alchemy-Fisch", name = "Alchemy Fisch", description = "Alchemy Hub for Fisch", url = "https://raw.githubusercontent.com/x2neptunereal/Alchemy/main/oldgateway.luau", color = Color3.fromRGB(200,50,255), category = "Fisch", icon = "🧪", enabled = false, customLoad = function() local d = FetchScript("https://raw.githubusercontent.com/x2neptunereal/Alchemy/main/oldgateway.luau") if d then local f,e = loadstring(d) if f then pcall(f,{"discord.gg/alchemyhub","x2neptune.space",true,"e4c"}) return true end end return false end},
+    {id = "Speed-Hub-X", name = "Speed Hub X", description = "Multi-game Hub", url = "https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua", color = Color3.fromRGB(0,255,200), category = "Fisch", icon = "🚀", enabled = false, customLoad = function() local d = FetchScript("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua") if d then local f,e = loadstring(d) if f then pcall(f) return true end end return false end},
+    {id = "Meng-GAG2", name = "Meng GAG2", description = "Grow A Garden 2", url = "https://raw.githubusercontent.com/GrexXMeng/Mengs/refs/heads/main/GAG2.lua", color = Color3.fromRGB(0,255,100), category = "Grow A Garden", icon = "🌱", enabled = false},
+    {id = "Meng-SawahIndo", name = "Meng SawahIndo", description = "Sawah Indo Auto Farm", url = "https://raw.githubusercontent.com/GrexXMeng/Mengs/refs/heads/main/SawahIndo.lua", color = Color3.fromRGB(0,200,150), category = "Grow A Garden", icon = "🌾", enabled = false},
+    {id = "Meng-SailorPiece", name = "Meng Sailor", description = "Sailor Piece Auto Farm", url = "https://raw.githubusercontent.com/GrexXMeng/Mengs/refs/heads/main/SailorPiece.lua", color = Color3.fromRGB(255,200,50), category = "Misc", icon = "⛵", enabled = false},
+    {id = "Meng-Violence", name = "Meng Violence", description = "Violence District Auto Farm", url = "https://raw.githubusercontent.com/GrexXMeng/Mengs/refs/heads/main/ViolenceDistrict.lua", color = Color3.fromRGB(255,50,50), category = "Misc", icon = "⚡", enabled = false},
+    {id = "TSB-Hub", name = "TSB Hub", description = "The Strongest Battlegrounds", url = "https://raw.githubusercontent.com/minhnhatdepzai8-cloud/TONG-HOP-SCRIPT/refs/heads/main/TSB", color = Color3.fromRGB(255,200,50), category = "TSB", icon = "🥊", enabled = false, note = "⚡ TSB"}
+}
+
+-- ============================================
+-- CATEGORIES
+-- ============================================
+local CategoriesList = {"All", "Blox Fruits", "Fisch", "Grow A Garden", "Misc", "TSB"}
+local CategoryBtns = {}
+local selectedCategory = "All"
+
+-- ============================================
+-- UTILITY FUNCTIONS
+-- ============================================
+local function Tween(obj, props, t, style, dir)
+    style = style or Enum.EasingStyle.Quint
+    dir = dir or Enum.EasingDirection.Out
+    TweenService:Create(obj, TweenInfo.new(t, style, dir), props):Play()
+end
+
+local function FetchScript(url)
+    local ok, data = pcall(function() return game:HttpGet(url) end)
+    if ok and data then return data end
+    return nil
+end
+
+local function ExecuteScript(code, name)
+    local func, err = loadstring(code)
+    if not func then return false end
+    local success, result = pcall(func)
+    if not success then return false end
+    return true
+end
+
+-- ============================================
+-- CREATE UI
+-- ============================================
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "HIeuDzXD_Manager"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+ScreenGui.Parent = CoreGui
+
+-- ============================================
+-- LOADING SCREEN
+-- ============================================
+local LoadingFrame = Instance.new("Frame")
+LoadingFrame.Size = UDim2.new(0, 300, 0, 150)
+LoadingFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+LoadingFrame.BackgroundColor3 = Color3.fromRGB(8, 4, 20)
+LoadingFrame.BackgroundTransparency = 0.05
+LoadingFrame.BorderSizePixel = 1
+LoadingFrame.BorderColor3 = Color3.fromRGB(255, 100, 0)
+LoadingFrame.ZIndex = 1000
+LoadingFrame.Parent = ScreenGui
+
+local LoadingCorner = Instance.new("UICorner")
+LoadingCorner.CornerRadius = UDim.new(0, 16)
+LoadingCorner.Parent = LoadingFrame
+
+local LoadingGrad = Instance.new("UIGradient")
+LoadingGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 8, 45)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(14, 5, 35)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(8, 3, 25))
+})
+LoadingGrad.Parent = LoadingFrame
+
+-- Loading Icon
+local LoadIcon = Instance.new("TextLabel")
+LoadIcon.Size = UDim2.new(0, 50, 0, 50)
+LoadIcon.Position = UDim2.new(0.5, -25, 0.3, -25)
+LoadIcon.BackgroundTransparency = 1
+LoadIcon.Text = "🔥"
+LoadIcon.TextColor3 = Color3.fromRGB(255, 200, 50)
+LoadIcon.TextSize = 40
+LoadIcon.Font = Enum.Font.GothamBold
+LoadIcon.Parent = LoadingFrame
+
+-- Loading Title
+local LoadTitle = Instance.new("TextLabel")
+LoadTitle.Size = UDim2.new(1, 0, 0, 24)
+LoadTitle.Position = UDim2.new(0, 0, 0.6, 0)
+LoadTitle.BackgroundTransparency = 1
+LoadTitle.Text = "HIeuDzXD LOADING..."
+LoadTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+LoadTitle.TextSize = 16
+LoadTitle.Font = Enum.Font.GothamBold
+LoadTitle.Parent = LoadingFrame
+
+-- Loading Status
+local LoadStatus = Instance.new("TextLabel")
+LoadStatus.Size = UDim2.new(1, 0, 0, 16)
+LoadStatus.Position = UDim2.new(0, 0, 0.75, 0)
+LoadStatus.BackgroundTransparency = 1
+LoadStatus.Text = "Initializing..."
+LoadStatus.TextColor3 = Color3.fromRGB(200, 200, 220)
+LoadStatus.TextSize = 12
+LoadStatus.Font = Enum.Font.Gotham
+LoadStatus.Parent = LoadingFrame
+
+-- Loading Progress Bar
+local LoadProg = Instance.new("Frame")
+LoadProg.Size = UDim2.new(0.8, 0, 0, 4)
+LoadProg.Position = UDim2.new(0.1, 0, 0.9, 0)
+LoadProg.BackgroundColor3 = Color3.fromRGB(40, 30, 70)
+LoadProg.BorderSizePixel = 0
+LoadProg.Parent = LoadingFrame
+
+local LoadProgCorner = Instance.new("UICorner")
+LoadProgCorner.CornerRadius = UDim.new(1, 0)
+LoadProgCorner.Parent = LoadProg
+
+local LoadProgFill = Instance.new("Frame")
+LoadProgFill.Size = UDim2.new(0, 0, 1, 0)
+LoadProgFill.BackgroundColor3 = Color3.fromRGB(255, 100, 0)
+LoadProgFill.BorderSizePixel = 0
+LoadProgFill.Parent = LoadProg
+
+local LoadFillCorner = Instance.new("UICorner")
+LoadFillCorner.CornerRadius = UDim.new(1, 0)
+LoadFillCorner.Parent = LoadProgFill
+
+-- Loading Animation (Spinning Flame)
+task.spawn(function()
+    while LoadingFrame.Parent do
+        LoadIcon.Rotation = (LoadIcon.Rotation or 0) + 5
+        task.wait(0.02)
+    end
+end)
+
+-- ============================================
+-- TOGGLE BUTTON (Hidden until loaded)
+-- ============================================
+local ToggleBtn = Instance.new("ImageButton")
+ToggleBtn.Size = UDim2.new(0, 50, 0, 50)
+ToggleBtn.Position = UDim2.new(1, -65, 0.5, -25)
+ToggleBtn.BackgroundColor3 = Settings.Theme.Primary
+ToggleBtn.BackgroundTransparency = 0.05
+ToggleBtn.BorderSizePixel = 0
+ToggleBtn.Image = "rbxassetid://7733992528"
+ToggleBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+ToggleBtn.ZIndex = 999
+ToggleBtn.Visible = false
+ToggleBtn.Parent = ScreenGui
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(1, 0)
+ToggleCorner.Parent = ToggleBtn
+
+local ToggleGlow = Instance.new("Frame")
+ToggleGlow.Size = UDim2.new(1.4, 0, 1.4, 0)
+ToggleGlow.Position = UDim2.new(-0.2, 0, -0.2, 0)
+ToggleGlow.BackgroundColor3 = Settings.Theme.Primary
+ToggleGlow.BackgroundTransparency = 0.85
+ToggleGlow.BorderSizePixel = 0
+ToggleGlow.ZIndex = 998
+ToggleGlow.Parent = ToggleBtn
+
+local GlowCorner = Instance.new("UICorner")
+GlowCorner.CornerRadius = UDim.new(1, 0)
+GlowCorner.Parent = ToggleGlow
+
+ToggleBtn.MouseEnter:Connect(function()
+    Tween(ToggleBtn, { Size = UDim2.new(0, 55, 0, 55), Position = UDim2.new(1, -67.5, 0.5, -27.5) }, 0.2)
+end)
+ToggleBtn.MouseLeave:Connect(function()
+    Tween(ToggleBtn, { Size = UDim2.new(0, 50, 0, 50), Position = UDim2.new(1, -65, 0.5, -25) }, 0.2)
+end)
+
+-- ============================================
+-- MAIN FRAME
+-- ============================================
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 0, 0, 0)
+MainFrame.Position = UDim2.new(1, -(Settings.Size.Width + 20), 0.5, -Settings.Size.Height/2)
+MainFrame.BackgroundColor3 = Settings.Theme.Secondary
+MainFrame.BackgroundTransparency = 0.05
+MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
+MainFrame.Visible = false
+MainFrame.Parent = ScreenGui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 16)
+MainCorner.Parent = MainFrame
+
+local MainGrad = Instance.new("UIGradient")
+MainGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 8, 45)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(14, 5, 35)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(8, 3, 25))
+})
+MainGrad.Parent = MainFrame
+
+-- Border Glow
+local BorderGlow = Instance.new("Frame")
+BorderGlow.Size = UDim2.new(1.02, 0, 1.02, 0)
+BorderGlow.Position = UDim2.new(-0.01, 0, -0.01, 0)
+BorderGlow.BackgroundColor3 = Settings.Theme.Primary
+BorderGlow.BackgroundTransparency = 0.9
+BorderGlow.BorderSizePixel = 0
+BorderGlow.ZIndex = 0
+BorderGlow.Parent = MainFrame
+
+local BorderCorner = Instance.new("UICorner")
+BorderCorner.CornerRadius = UDim.new(0, 18)
+BorderCorner.Parent = BorderGlow
+
+-- Header
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 50)
+Header.BackgroundColor3 = Settings.Theme.Primary
+Header.BackgroundTransparency = 0.08
+Header.BorderSizePixel = 0
+Header.Parent = MainFrame
+
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 16)
+HeaderCorner.Parent = Header
+
+local HeaderGrad = Instance.new("UIGradient")
+HeaderGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 120, 30)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 80, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 60, 0))
+})
+HeaderGrad.Parent = Header
+
+-- Logo
+local Logo = Instance.new("TextLabel")
+Logo.Size = UDim2.new(0, 32, 1, 0)
+Logo.Position = UDim2.new(0, 10, 0, 0)
+Logo.BackgroundTransparency = 1
+Logo.Text = "🔥"
+Logo.TextColor3 = Color3.fromRGB(255, 200, 50)
+Logo.TextSize = 22
+Logo.Font = Enum.Font.GothamBold
+Logo.Parent = Header
+
+-- Title
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -95, 0, 18)
+Title.Position = UDim2.new(0, 46, 0, 6)
+Title.BackgroundTransparency = 1
+Title.Text = "HIeuDzXD"
+Title.TextColor3 = Settings.Theme.Text
+Title.TextSize = 15
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
+
+local SubTitle = Instance.new("TextLabel")
+SubTitle.Size = UDim2.new(1, -95, 0, 14)
+SubTitle.Position = UDim2.new(0, 46, 0, 26)
+SubTitle.BackgroundTransparency = 1
+SubTitle.Text = "⚡ 21 Scripts"
+SubTitle.TextColor3 = Settings.Theme.Accent
+SubTitle.TextSize = 10
+SubTitle.Font = Enum.Font.Gotham
+SubTitle.TextXAlignment = Enum.TextXAlignment.Left
+SubTitle.Parent = Header
+
+-- Settings Button
+local SettingsBtn = Instance.new("TextButton")
+SettingsBtn.Size = UDim2.new(0, 28, 0, 28)
+SettingsBtn.Position = UDim2.new(1, -68, 0.5, -14)
+SettingsBtn.BackgroundColor3 = Color3.fromRGB(60, 50, 140)
+SettingsBtn.BackgroundTransparency = 0.1
+SettingsBtn.Text = "⚙️"
+SettingsBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+SettingsBtn.TextSize = 14
+SettingsBtn.Font = Enum.Font.GothamBold
+SettingsBtn.Parent = Header
+
+local SettingsCorner = Instance.new("UICorner")
+SettingsCorner.CornerRadius = UDim.new(0, 6)
+SettingsCorner.Parent = SettingsBtn
+
+-- Close Button
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Size = UDim2.new(0, 28, 0, 28)
+CloseBtn.Position = UDim2.new(1, -36, 0.5, -14)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 60)
+CloseBtn.BackgroundTransparency = 0.1
+CloseBtn.Text = "✕"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.TextSize = 13
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.Parent = Header
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 6)
+CloseCorner.Parent = CloseBtn
+
+CloseBtn.MouseButton1Click:Connect(function()
+    Tween(MainFrame, { Size = UDim2.new(0, 0, 0, 0) }, 0.3)
+    task.wait(0.3)
+    MainFrame.Visible = false
+end)
+
+-- Search Bar
+local SearchFrame = Instance.new("Frame")
+SearchFrame.Size = UDim2.new(1, -16, 0, 30)
+SearchFrame.Position = UDim2.new(0, 8, 0, 56)
+SearchFrame.BackgroundColor3 = Color3.fromRGB(20, 10, 45)
+SearchFrame.BackgroundTransparency = 0.2
+SearchFrame.BorderSizePixel = 1
+SearchFrame.BorderColor3 = Settings.Theme.Border
+SearchFrame.Parent = MainFrame
+
+local SearchCorner = Instance.new("UICorner")
+SearchCorner.CornerRadius = UDim.new(0, 8)
+SearchCorner.Parent = SearchFrame
+
+local SearchIcon = Instance.new("TextLabel")
+SearchIcon.Size = UDim2.new(0, 28, 1, 0)
+SearchIcon.BackgroundTransparency = 1
+SearchIcon.Text = "🔍"
+SearchIcon.TextColor3 = Color3.fromRGB(200, 200, 200)
+SearchIcon.TextSize = 12
+SearchIcon.Parent = SearchFrame
+
+local SearchBox = Instance.new("TextBox")
+SearchBox.Size = UDim2.new(1, -35, 1, 0)
+SearchBox.Position = UDim2.new(0, 30, 0, 0)
+SearchBox.BackgroundTransparency = 1
+SearchBox.Text = ""
+SearchBox.TextColor3 = Settings.Theme.Text
+SearchBox.TextSize = 11
+SearchBox.Font = Enum.Font.Gotham
+SearchBox.PlaceholderText = "🔍 Search scripts..."
+SearchBox.PlaceholderColor3 = Color3.fromRGB(120, 100, 180)
+SearchBox.Parent = SearchFrame
+
+-- Category Filter
+local CategoryFrame = Instance.new("Frame")
+CategoryFrame.Size = UDim2.new(1, -16, 0, 24)
+CategoryFrame.Position = UDim2.new(0, 8, 0, 92)
+CategoryFrame.BackgroundColor3 = Color3.fromRGB(10, 5, 25)
+CategoryFrame.BackgroundTransparency = 0.3
+CategoryFrame.BorderSizePixel = 0
+CategoryFrame.Parent = MainFrame
+
+local CategoryScroll = Instance.new("ScrollingFrame")
+CategoryScroll.Size = UDim2.new(1, 0, 1, 0)
+CategoryScroll.BackgroundTransparency = 1
+CategoryScroll.BorderSizePixel = 0
+CategoryScroll.CanvasSize = UDim2.new(0, 450, 0, 0)
+CategoryScroll.ScrollBarThickness = 0
+CategoryScroll.Parent = CategoryFrame
+
+for i, cat in ipairs(CategoriesList) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 70, 1, -4)
+    btn.Position = UDim2.new(0, (i-1)*74, 0, 2)
+    btn.BackgroundColor3 = cat == "All" and Settings.Theme.Primary or Color3.fromRGB(30, 20, 60)
+    btn.BackgroundTransparency = cat == "All" and 0.1 or 0.3
+    btn.Text = cat
+    btn.TextColor3 = cat == "All" and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 200)
+    btn.TextSize = 9
+    btn.Font = Enum.Font.GothamBold
+    btn.Parent = CategoryScroll
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 4)
+    btnCorner.Parent = btn
+    
+    CategoryBtns[cat] = btn
+    
+    btn.MouseButton1Click:Connect(function()
+        selectedCategory = cat
+        for _, tb in pairs(CategoryBtns) do
+            tb.BackgroundColor3 = Color3.fromRGB(30, 20, 60)
+            tb.BackgroundTransparency = 0.3
+            tb.TextColor3 = Color3.fromRGB(200, 200, 200)
+        end
+        btn.BackgroundColor3 = Settings.Theme.Primary
+        btn.BackgroundTransparency = 0.1
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        LoadScriptsToUI(SearchBox.Text, selectedCategory)
+    end)
+end
+
+-- Script List
+local ListFrame = Instance.new("ScrollingFrame")
+ListFrame.Size = UDim2.new(1, -16, 1, -180)
+ListFrame.Position = UDim2.new(0, 8, 0, 122)
+ListFrame.BackgroundColor3 = Color3.fromRGB(4, 2, 12)
+ListFrame.BackgroundTransparency = 0.2
+ListFrame.BorderSizePixel = 0
+ListFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+ListFrame.ScrollBarThickness = 4
+ListFrame.ScrollBarImageColor3 = Settings.Theme.Primary
+ListFrame.Parent = MainFrame
+
+local ListCorner = Instance.new("UICorner")
+ListCorner.CornerRadius = UDim.new(0, 8)
+ListCorner.Parent = ListFrame
+
+-- Bottom Bar
+local BottomBar = Instance.new("Frame")
+BottomBar.Size = UDim2.new(1, 0, 0, 36)
+BottomBar.Position = UDim2.new(0, 0, 1, -36)
+BottomBar.BackgroundColor3 = Color3.fromRGB(20, 10, 45)
+BottomBar.BackgroundTransparency = 0.2
+BottomBar.BorderSizePixel = 0
+BottomBar.Parent = MainFrame
+
+local BottomCorner = Instance.new("UICorner")
+BottomCorner.CornerRadius = UDim.new(0, 16)
+BottomCorner.Parent = BottomBar
+
+-- Status
+local StatusIcon = Instance.new("TextLabel")
+StatusIcon.Size = UDim2.new(0, 14, 1, 0)
+StatusIcon.Position = UDim2.new(0, 10, 0, 0)
+StatusIcon.BackgroundTransparency = 1
+StatusIcon.Text = "●"
+StatusIcon.TextColor3 = Color3.fromRGB(0, 255, 100)
+StatusIcon.TextSize = 11
+StatusIcon.Font = Enum.Font.GothamBold
+StatusIcon.Parent = BottomBar
+
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Size = UDim2.new(0.6, -30, 1, 0)
+StatusLabel.Position = UDim2.new(0, 28, 0, 0)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = "Ready"
+StatusLabel.TextColor3 = Settings.Theme.SubText
+StatusLabel.TextSize = 10
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
+StatusLabel.Parent = BottomBar
+
+-- Counter
+local CounterLabel = Instance.new("TextLabel")
+CounterLabel.Size = UDim2.new(0.4, -10, 1, 0)
+CounterLabel.Position = UDim2.new(0.6, 10, 0, 0)
+CounterLabel.BackgroundTransparency = 1
+CounterLabel.Text = "⚡ 0/21"
+CounterLabel.TextColor3 = Settings.Theme.Accent
+CounterLabel.TextSize = 10
+CounterLabel.Font = Enum.Font.GothamBold
+CounterLabel.TextXAlignment = Enum.TextXAlignment.Right
+CounterLabel.Parent = BottomBar
+
+-- Progress Bar
+local ProgBar = Instance.new("Frame")
+ProgBar.Size = UDim2.new(0, 50, 0, 3)
+ProgBar.Position = UDim2.new(0.6, 10, 0.5, 10)
+ProgBar.BackgroundColor3 = Color3.fromRGB(40, 30, 70)
+ProgBar.BorderSizePixel = 0
+ProgBar.Parent = BottomBar
+
+local ProgFill = Instance.new("Frame")
+ProgFill.Size = UDim2.new(0, 0, 1, 0)
+ProgFill.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+ProgFill.BorderSizePixel = 0
+ProgFill.Parent = ProgBar
+
+local ProgCorner = Instance.new("UICorner")
+ProgCorner.CornerRadius = UDim.new(1, 0)
+ProgCorner.Parent = ProgBar
+local ProgFillCorner = Instance.new("UICorner")
+ProgFillCorner.CornerRadius = UDim.new(1, 0)
+ProgFillCorner.Parent = ProgFill
+
+-- ============================================
+-- SETTINGS POPUP
+-- ============================================
+local SettingsPopup = nil
+
+local function OpenSettings()
+    if SettingsPopup then
+        SettingsPopup:Destroy()
+        SettingsPopup = nil
+        return
+    end
+    
+    local popup = Instance.new("Frame")
+    popup.Size = UDim2.new(0, 280, 0, 230)
+    popup.Position = UDim2.new(0.5, -140, 0.5, -115)
+    popup.BackgroundColor3 = Color3.fromRGB(20, 10, 45)
+    popup.BackgroundTransparency = 0.1
+    popup.BorderSizePixel = 1
+    popup.BorderColor3 = Settings.Theme.Primary
+    popup.Parent = MainFrame
+    SettingsPopup = popup
+    
+    local popupCorner = Instance.new("UICorner")
+    popupCorner.CornerRadius = UDim.new(0, 12)
+    popupCorner.Parent = popup
+    
+    -- Title
+    local titleBar = Instance.new("Frame")
+    titleBar.Size = UDim2.new(1, 0, 0, 32)
+    titleBar.BackgroundColor3 = Settings.Theme.Primary
+    titleBar.BackgroundTransparency = 0.1
+    titleBar.BorderSizePixel = 0
+    titleBar.Parent = popup
+    
+    local titleCorner = Instance.new("UICorner")
+    titleCorner.CornerRadius = UDim.new(0, 12)
+    titleCorner.Parent = titleBar
+    
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(1, -40, 1, 0)
+    titleLabel.Position = UDim2.new(0, 10, 0, 0)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = "⚙️ Settings"
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.TextSize = 13
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = titleBar
+    
+    local closePopup = Instance.new("TextButton")
+    closePopup.Size = UDim2.new(0, 26, 0, 26)
+    closePopup.Position = UDim2.new(1, -32, 0.5, -13)
+    closePopup.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    closePopup.BackgroundTransparency = 0.2
+    closePopup.Text = "✕"
+    closePopup.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closePopup.TextSize = 12
+    closePopup.Font = Enum.Font.GothamBold
+    closePopup.Parent = titleBar
+    
+    local closeCorner = Instance.new("UICorner")
+    closeCorner.CornerRadius = UDim.new(0, 6)
+    closeCorner.Parent = closePopup
+    
+    closePopup.MouseButton1Click:Connect(function()
+        popup:Destroy()
+        SettingsPopup = nil
+    end)
+    
+    -- Scroll
+    local scroll = Instance.new("ScrollingFrame")
+    scroll.Size = UDim2.new(1, -10, 1, -42)
+    scroll.Position = UDim2.new(0, 5, 0, 36)
+    scroll.BackgroundTransparency = 1
+    scroll.BorderSizePixel = 0
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 200)
+    scroll.ScrollBarThickness = 3
+    scroll.Parent = popup
+    
+    -- Color Buttons
+    local colors = {
+        {label = "Primary", key = "Primary"},
+        {label = "Accent", key = "Accent"},
+        {label = "Text", key = "Text"},
+        {label = "SubText", key = "SubText"},
+        {label = "Card BG", key = "CardBg"},
+        {label = "Border", key = "Border"}
+    }
+    
+    local yPos = 0
+    for _, color in ipairs(colors) do
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(1, -10, 0, 28)
+        frame.Position = UDim2.new(0, 5, 0, yPos)
+        frame.BackgroundColor3 = Color3.fromRGB(30, 20, 60)
+        frame.BackgroundTransparency = 0.3
+        frame.BorderSizePixel = 0
+        frame.Parent = scroll
+        
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(0, 70, 1, 0)
+        label.Position = UDim2.new(0, 5, 0, 0)
+        label.BackgroundTransparency = 1
+        label.Text = color.label
+        label.TextColor3 = Color3.fromRGB(200, 200, 220)
+        label.TextSize = 10
+        label.Font = Enum.Font.Gotham
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.Parent = frame
+        
+        local colorBtn = Instance.new("TextButton")
+        colorBtn.Size = UDim2.new(0, 80, 0, 20)
+        colorBtn.Position = UDim2.new(1, -90, 0.5, -10)
+        colorBtn.BackgroundColor3 = Settings.Theme[color.key]
+        colorBtn.BackgroundTransparency = 0.2
+        colorBtn.Text = ""
+        colorBtn.Parent = frame
+        
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.CornerRadius = UDim.new(0, 4)
+        btnCorner.Parent = colorBtn
+        
+        -- Color picker popup
+        local colorOptions = {
+            Color3.fromRGB(255, 100, 0),
+            Color3.fromRGB(0, 200, 255),
+            Color3.fromRGB(255, 50, 100),
+            Color3.fromRGB(0, 255, 100),
+            Color3.fromRGB(200, 50, 255),
+            Color3.fromRGB(255, 200, 50),
+            Color3.fromRGB(255, 255, 255),
+            Color3.fromRGB(200, 200, 200),
+            Color3.fromRGB(100, 100, 100),
+            Color3.fromRGB(50, 50, 50)
+        }
+        
+        local pickerVisible = false
+        local picker = nil
+        
+        colorBtn.MouseButton1Click:Connect(function()
+            if picker then
+                picker:Destroy()
+                picker = nil
+                pickerVisible = false
+                return
+            end
+            
+            picker = Instance.new("Frame")
+            picker.Size = UDim2.new(0, 120, 0, 80)
+            picker.Position = UDim2.new(1, -125, 0.5, -40)
+            picker.BackgroundColor3 = Color3.fromRGB(20, 10, 45)
+            picker.BackgroundTransparency = 0.1
+            picker.BorderSizePixel = 1
+            picker.BorderColor3 = Settings.Theme.Border
+            picker.Parent = frame
+            
+            local pickerCorner = Instance.new("UICorner")
+            pickerCorner.CornerRadius = UDim.new(0, 6)
+            pickerCorner.Parent = picker
+            
+            local pickerScroll = Instance.new("ScrollingFrame")
+            pickerScroll.Size = UDim2.new(1, -6, 1, -6)
+            pickerScroll.Position = UDim2.new(0, 3, 0, 3)
+            pickerScroll.BackgroundTransparency = 1
+            pickerScroll.BorderSizePixel = 0
+            pickerScroll.CanvasSize = UDim2.new(0, 110, 0, 100)
+            pickerScroll.ScrollBarThickness = 0
+            pickerScroll.Parent = picker
+            
+            local grid = Instance.new("UIGridLayout")
+            grid.CellSize = UDim2.new(0, 20, 0, 20)
+            grid.CellPadding = UDim2.new(0, 2, 0, 2)
+            grid.Parent = pickerScroll
+            
+            for _, c in ipairs(colorOptions) do
+                local btn = Instance.new("TextButton")
+                btn.Size = UDim2.new(0, 20, 0, 20)
+                btn.BackgroundColor3 = c
+                btn.BackgroundTransparency = 0.2
+                btn.Text = ""
+                btn.Parent = pickerScroll
+                
+                local btnCorner2 = Instance.new("UICorner")
+                btnCorner2.CornerRadius = UDim.new(0, 4)
+                btnCorner2.Parent = btn
+                
+                btn.MouseButton1Click:Connect(function()
+                    Settings.Theme[color.key] = c
+                    colorBtn.BackgroundColor3 = c
+                    UpdateTheme()
+                    picker:Destroy()
+                    picker = nil
+                    pickerVisible = false
+                end)
+            end
+        end)
+        
+        yPos = yPos + 32
+    end
+    
+    -- Size Settings
+    local sizeFrame = Instance.new("Frame")
+    sizeFrame.Size = UDim2.new(1, -10, 0, 28)
+    sizeFrame.Position = UDim2.new(0, 5, 0, yPos)
+    sizeFrame.BackgroundColor3 = Color3.fromRGB(30, 20, 60)
+    sizeFrame.BackgroundTransparency = 0.3
+    sizeFrame.BorderSizePixel = 0
+    sizeFrame.Parent = scroll
+    
+    local sizeLabel = Instance.new("TextLabel")
+    sizeLabel.Size = UDim2.new(0, 70, 1, 0)
+    sizeLabel.Position = UDim2.new(0, 5, 0, 0)
+    sizeLabel.BackgroundTransparency = 1
+    sizeLabel.Text = "Size"
+    sizeLabel.TextColor3 = Color3.fromRGB(200, 200, 220)
+    sizeLabel.TextSize = 10
+    sizeLabel.Font = Enum.Font.Gotham
+    sizeLabel.TextXAlignment = Enum.TextXAlignment.Left
+    sizeLabel.Parent = sizeFrame
+    
+    local sizeSlider = Instance.new("Frame")
+    sizeSlider.Size = UDim2.new(0, 80, 0, 6)
+    sizeSlider.Position = UDim2.new(1, -90, 0.5, -3)
+    sizeSlider.BackgroundColor3 = Color3.fromRGB(50, 40, 80)
+    sizeSlider.Parent = sizeFrame
+    
+    local sizeFill = Instance.new("Frame")
+    sizeFill.Size = UDim2.new((Settings.Size.Scale - 0.5) / 1.5, 0, 1, 0)
+    sizeFill.BackgroundColor3 = Settings.Theme.Primary
+    sizeFill.Parent = sizeSlider
+    
+    local sizeValue = Instance.new("TextLabel")
+    sizeValue.Size = UDim2.new(0, 30, 1, 0)
+    sizeValue.Position = UDim2.new(1, -35, 0, 0)
+    sizeValue.BackgroundTransparency = 1
+    sizeValue.Text = math.floor(Settings.Size.Scale * 100) .. "%"
+    sizeValue.TextColor3 = Color3.fromRGB(200, 200, 200)
+    sizeValue.TextSize = 9
+    sizeValue.Font = Enum.Font.Gotham
+    sizeValue.Parent = sizeFrame
+    
+    local draggingSize = false
+    sizeSlider.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingSize = true
+        end
+    end)
+    sizeSlider.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingSize = false
+        end
+    end)
+    
+    RunService.RenderStepped:Connect(function()
+        if draggingSize then
+            local mousePos = Mouse.X - sizeSlider.AbsolutePosition.X
+            local percent = math.clamp(mousePos / sizeSlider.AbsoluteSize.X, 0, 1)
+            local scale = 0.5 + percent * 1.5
+            Settings.Size.Scale = math.floor(scale * 10) / 10
+            sizeFill.Size = UDim2.new(percent, 0, 1, 0)
+            sizeValue.Text = math.floor(Settings.Size.Scale * 100) .. "%"
+            UpdateUISize()
+        end
+    end)
+    
+    scroll.CanvasSize = UDim2.new(0, 0, 0, yPos + 40)
+end
+
+-- ============================================
+-- UPDATE FUNCTIONS
+-- ============================================
+function UpdateTheme()
+    -- Update Toggle Button
+    ToggleBtn.BackgroundColor3 = Settings.Theme.Primary
+    ToggleGlow.BackgroundColor3 = Settings.Theme.Primary
+    
+    -- Update Main Frame
+    MainFrame.BackgroundColor3 = Settings.Theme.Secondary
+    BorderGlow.BackgroundColor3 = Settings.Theme.Primary
+    
+    -- Update Header
+    Header.BackgroundColor3 = Settings.Theme.Primary
+    
+    -- Update Title Colors
+    Title.TextColor3 = Settings.Theme.Text
+    SubTitle.TextColor3 = Settings.Theme.Accent
+    
+    -- Update Search
+    SearchFrame.BorderColor3 = Settings.Theme.Border
+    SearchBox.TextColor3 = Settings.Theme.Text
+    
+    -- Update Status
+    StatusLabel.TextColor3 = Settings.Theme.SubText
+    CounterLabel.TextColor3 = Settings.Theme.Accent
+    ListFrame.ScrollBarImageColor3 = Settings.Theme.Primary
+end
+
+function UpdateUISize()
+    local w = Settings.Size.Width * Settings.Size.Scale
+    local h = Settings.Size.Height * Settings.Size.Scale
+    MainFrame.Size = UDim2.new(0, w, 0, h)
+    MainFrame.Position = UDim2.new(1, -(w + 20), 0.5, -h/2)
+end
+
+-- ============================================
+-- LOAD SCRIPTS TO UI
+-- ============================================
+function LoadScriptsToUI(filter, category)
+    filter = filter or ""
+    filter = string.lower(filter)
+    category = category or "All"
+    
+    for _, child in pairs(ListFrame:GetChildren()) do
+        if child:IsA("Frame") then
+            child:Destroy()
+        end
+    end
+    
+    local count = 0
+    local loadedCount = 0
+    local yPos = 0
+    local cardHeight = 44
+    
+    for _, script in ipairs(ScriptRegistry) do
+        if script.enabled then loadedCount = loadedCount + 1 end
+        
+        local matchName = string.find(string.lower(script.name), filter)
+        local matchDesc = string.find(string.lower(script.description), filter)
+        local matchCat = (category == "All" or script.category == category)
+        
+        if (filter == "" or matchName or matchDesc) and matchCat then
+            count = count + 1
+            
+            local card = Instance.new("Frame")
+            card.Size = UDim2.new(1, 0, 0, cardHeight)
+            card.Position = UDim2.new(0, 0, 0, yPos)
+            card.BackgroundColor3 = script.enabled and Color3.fromRGB(0, 60, 30) or Settings.Theme.CardBg
+            card.BackgroundTransparency = 0.1
+            card.BorderSizePixel = 1
+            card.BorderColor3 = script.enabled and Color3.fromRGB(0, 255, 100) or Settings.Theme.Border
+            card.ClipsDescendants = true
+            card.Parent = ListFrame
+            
+            local cardCorner = Instance.new("UICorner")
+            cardCorner.CornerRadius = UDim.new(0, 6)
+            cardCorner.Parent = card
+            
+            -- Glow on hover
+            local cardGlow = Instance.new("Frame")
+            cardGlow.Size = UDim2.new(1, 0, 1, 0)
+            cardGlow.BackgroundColor3 = Settings.Theme.Primary
+            cardGlow.BackgroundTransparency = 0.9
+            cardGlow.BorderSizePixel = 0
+            cardGlow.Visible = false
+            cardGlow.Parent = card
+            
+            local glowCorner = Instance.new("UICorner")
+            glowCorner.CornerRadius = UDim.new(0, 6)
+            glowCorner.Parent = cardGlow
+            
+            -- Icon
+            local icon = Instance.new("TextLabel")
+            icon.Size = UDim2.new(0, 26, 1, 0)
+            icon.BackgroundTransparency = 1
+            icon.Text = script.icon or "📦"
+            icon.TextColor3 = Color3.fromRGB(255, 255, 255)
+            icon.TextSize = 14
+            icon.Parent = card
+            
+            -- Name
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Size = UDim2.new(0.35, -30, 0, 14)
+            nameLabel.Position = UDim2.new(0, 30, 0, 3)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.Text = script.name
+            nameLabel.TextColor3 = Settings.Theme.Text
+            nameLabel.TextSize = 10
+            nameLabel.Font = Enum.Font.GothamBold
+            nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+            nameLabel.Parent = card
+            
+            -- Category Badge
+            local catBadge = Instance.new("Frame")
+            catBadge.Size = UDim2.new(0, 50, 0, 12)
+            catBadge.Position = UDim2.new(0.35, 5, 0, 3)
+            catBadge.BackgroundColor3 = script.color
+            catBadge.BackgroundTransparency = 0.3
+            catBadge.BorderSizePixel = 0
+            catBadge.Parent = card
+            
+            local catCorner = Instance.new("UICorner")
+            catCorner.CornerRadius = UDim.new(0, 3)
+            catCorner.Parent = catBadge
+            
+            local catText = Instance.new("TextLabel")
+            catText.Size = UDim2.new(1, 0, 1, 0)
+            catText.BackgroundTransparency = 1
+            catText.Text = script.category or ""
+            catText.TextColor3 = Color3.fromRGB(255, 255, 255)
+            catText.TextSize = 7
+            catText.Font = Enum.Font.GothamBold
+            catText.Parent = catBadge
+            
+            -- Note
+            if script.note then
+                local noteLabel = Instance.new("TextLabel")
+                noteLabel.Size = UDim2.new(0.25, -5, 0, 11)
+                noteLabel.Position = UDim2.new(0.35, 60, 0, 18)
+                noteLabel.BackgroundTransparency = 1
+                noteLabel.Text = script.note
+                noteLabel.TextColor3 = Settings.Theme.Accent
+                noteLabel.TextSize = 7
+                noteLabel.Font = Enum.Font.GothamBold
+                noteLabel.TextXAlignment = Enum.TextXAlignment.Left
+                noteLabel.Parent = card
+            end
+            
+            -- Description
+            local descLabel = Instance.new("TextLabel")
+            descLabel.Size = UDim2.new(0.5, -45, 0, 11)
+            descLabel.Position = UDim2.new(0, 30, 0, 20)
+            descLabel.BackgroundTransparency = 1
+            descLabel.Text = script.description or ""
+            descLabel.TextColor3 = Settings.Theme.SubText
+            descLabel.TextSize = 8
+            descLabel.Font = Enum.Font.Gotham
+            descLabel.TextXAlignment = Enum.TextXAlignment.Left
+            descLabel.TextTruncate = Enum.TextTruncate.AtEnd
+            descLabel.Parent = card
+            
+            -- Status indicator
+            local statusDot = Instance.new("Frame")
+            statusDot.Size = UDim2.new(0, 6, 0, 6)
+            statusDot.Position = UDim2.new(1, -10, 0.5, -3)
+            statusDot.BackgroundColor3 = script.enabled and Color3.fromRGB(0, 255, 100) or Color3.fromRGB(100, 100, 100)
+            statusDot.BorderSizePixel = 0
+            statusDot.Parent = card
+            
+            local dotCorner = Instance.new("UICorner")
+            dotCorner.CornerRadius = UDim.new(1, 0)
+            dotCorner.Parent = statusDot
+            
+            -- Load Button
+            local loadBtn = Instance.new("TextButton")
+            loadBtn.Size = UDim2.new(0, 55, 0, 24)
+            loadBtn.Position = UDim2.new(1, -70, 0.5, -12)
+            loadBtn.BackgroundColor3 = script.enabled and Color3.fromRGB(0, 200, 100) or Settings.Theme.Primary
+            loadBtn.BackgroundTransparency = 0.1
+            loadBtn.Text = script.enabled and "✓" or "Load"
+            loadBtn.TextColor3 = Settings.Theme.Text
+            loadBtn.TextSize = 9
+            loadBtn.Font = Enum.Font.GothamBold
+            loadBtn.Parent = card
+            
+            local btnCorner = Instance.new("UICorner")
+            btnCorner.CornerRadius = UDim.new(0, 4)
+            btnCorner.Parent = loadBtn
+            
+            -- Hover effects
+            card.MouseEnter:Connect(function()
+                Tween(card, { BackgroundTransparency = 0.05 }, 0.15)
+                cardGlow.Visible = true
+                Tween(cardGlow, { BackgroundTransparency = 0.85 }, 0.15)
+            end)
+            card.MouseLeave:Connect(function()
+                Tween(card, { BackgroundTransparency = 0.1 }, 0.15)
+                Tween(cardGlow, { BackgroundTransparency = 0.9 }, 0.15)
+                task.wait(0.15)
+                cardGlow.Visible = false
+            end)
+            
+            loadBtn.MouseEnter:Connect(function()
+                Tween(loadBtn, { BackgroundTransparency = 0.3 }, 0.1)
+            end)
+            loadBtn.MouseLeave:Connect(function()
+                Tween(loadBtn, { BackgroundTransparency = 0.1 }, 0.1)
+            end)
+            
+            -- Click handler
+            loadBtn.MouseButton1Click:Connect(function()
+                if script.enabled then
+                    StatusLabel.Text = "⚠️ " .. script.name .. " loaded"
+                    return
+                end
+                
+                StatusLabel.Text = "⏳ Loading " .. script.name .. "..."
+                loadBtn.Text = "..."
+                loadBtn.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+                StatusIcon.TextColor3 = Color3.fromRGB(255, 200, 0)
+                
+                task.spawn(function()
+                    local success = false
+                    
+                    if script.customLoad then
+                        success = script.customLoad()
+                    else
+                        local scriptData = FetchScript(script.url)
+                        if scriptData then
+                            success = ExecuteScript(scriptData, script.name)
+                        end
+                    end
+                    
+                    if success then
+                        script.enabled = true
+                        loadBtn.Text = "✓"
+                        loadBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+                        card.BorderColor3 = Color3.fromRGB(0, 255, 100)
+                        statusDot.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+                        card.BackgroundColor3 = Color3.fromRGB(0, 60, 30)
+                        StatusLabel.Text = "✅ " .. script.name .. " loaded!"
+                        StatusIcon.TextColor3 = Color3.fromRGB(0, 255, 100)
+                        
+                        local total = 0
+                        for _, s in pairs(ScriptRegistry) do
+                            if s.enabled then total = total + 1 end
+                        end
+                        CounterLabel.Text = "⚡ " .. total .. "/" .. #ScriptRegistry
+                        ProgFill.Size = UDim2.new(total/#ScriptRegistry, 0, 1, 0)
+                    else
+                        loadBtn.Text = "✕"
+                        loadBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+                        StatusLabel.Text = "❌ Failed " .. script.name
+                        StatusIcon.TextColor3 = Color3.fromRGB(255, 50, 50)
+                    end
+                end)
+            end)
+            
+            yPos = yPos + cardHeight + 4
+        end
+    end
+    
+    ListFrame.CanvasSize = UDim2.new(0, 0, 0, yPos + 10)
+    CounterLabel.Text = "⚡ " .. loadedCount .. "/" .. #ScriptRegistry
+    ProgFill.Size = UDim2.new(loadedCount/#ScriptRegistry, 0, 1, 0)
+    
+    if loadedCount > #ScriptRegistry * 0.7 then
+        ProgFill.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+    elseif loadedCount > #ScriptRegistry * 0.3 then
+        ProgFill.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+    else
+        ProgFill.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+    end
+end
+
+-- ============================================
+-- LOADING SEQUENCE
+-- ============================================
+local function LoadingSequence()
+    local steps = {
+        {text = "Initializing...", progress = 0.1},
+        {text = "Loading Script Registry...", progress = 0.25},
+        {text = "Fetching Scripts...", progress = 0.4},
+        {text = "Building UI...", progress = 0.6},
+        {text = "Loading Scripts...", progress = 0.75},
+        {text = "Finalizing...", progress = 0.9},
+        {text = "Ready!", progress = 1.0}
+    }
+    
+    for _, step in ipairs(steps) do
+        LoadStatus.Text = step.text
+        LoadProgFill.Size = UDim2.new(step.progress, 0, 1, 0)
+        if step.progress > 0.7 then
+            LoadProgFill.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+        elseif step.progress > 0.4 then
+            LoadProgFill.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+        else
+            LoadProgFill.BackgroundColor3 = Color3.fromRGB(255, 100, 0)
+        end
+        task.wait(0.3)
+    end
+    
+    -- Show Toggle Button
+    ToggleBtn.Visible = true
+    Tween(ToggleBtn, { BackgroundTransparency = 0.05 }, 0.3)
+    
+    -- Hide Loading Screen
+    Tween(LoadingFrame, { BackgroundTransparency = 1 }, 0.5)
+    task.wait(0.5)
+    LoadingFrame.Visible = false
+    LoadingFrame.Parent = nil
+    
+    -- Show Main Frame
+    MainFrame.Visible = true
+    UpdateUISize()
+    Tween(MainFrame, { Size = UDim2.new(0, Settings.Size.Width * Settings.Size.Scale, 0, Settings.Size.Height * Settings.Size.Scale) }, 0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+    
+    print("✅ HIeuDzXD MANAGER v5.2 LOADED!")
+    print("📊 Total Scripts: " .. #ScriptRegistry)
+end
+
+-- ============================================
+-- SEARCH
+-- ============================================
+SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    LoadScriptsToUI(SearchBox.Text, selectedCategory)
+end)
+
+-- ============================================
+-- TOGGLE
+-- ============================================
+local menuVisible = false
+
+ToggleBtn.MouseButton1Click:Connect(function()
+    menuVisible = not menuVisible
+    MainFrame.Visible = menuVisible
+    if menuVisible then
+        UpdateUISize()
+        Tween(MainFrame, { Size = UDim2.new(0, Settings.Size.Width * Settings.Size.Scale, 0, Settings.Size.Height * Settings.Size.Scale) }, 0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+        Tween(ToggleBtn, { ImageColor3 = Color3.fromRGB(255, 200, 100) }, 0.2)
+    else
+        Tween(MainFrame, { Size = UDim2.new(0, 0, 0, 0) }, 0.25)
+        Tween(ToggleBtn, { ImageColor3 = Color3.fromRGB(255, 255, 255) }, 0.2)
+    end
+end)
+
+UserInputService.InputBegan:Connect(function(input, gp)
+    if gp then return end
+    if input.KeyCode == Enum.KeyCode.RightControl then
+        menuVisible = not menuVisible
+        MainFrame.Visible = menuVisible
+        if menuVisible then
+            UpdateUISize()
+            Tween(MainFrame, { Size = UDim2.new(0, Settings.Size.Width * Settings.Size.Scale, 0, Settings.Size.Height * Settings.Size.Scale) }, 0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+            Tween(ToggleBtn, { ImageColor3 = Color3.fromRGB(255, 200, 100) }, 0.2)
+        else
+            Tween(MainFrame, { Size = UDim2.new(0, 0, 0, 0) }, 0.25)
+            Tween(ToggleBtn, { ImageColor3 = Color3.fromRGB(255, 255, 255) }, 0.2)
+        end
+    end
+end)
+
+-- Settings Button
+SettingsBtn.MouseButton1Click:Connect(function()
+    OpenSettings()
+end)
+
+-- ============================================
+-- DRAG
+-- ============================================
+local dragging = false
+local dragStart, startPos
+
+Header.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+Header.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        if dragging then
+            local delta = input.Position - dragStart
+            MainFrame.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end
+end)
+
+-- ============================================
+-- INIT - START LOADING
+-- ============================================
+LoadScriptsToUI()
+UpdateTheme()
+task.wait(0.5)
+LoadingSequence()
